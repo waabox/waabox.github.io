@@ -1,8 +1,7 @@
 (function () {
   "use strict";
 
-  var GITHUB_USER = "waabox";
-  var API_URL = "https://api.github.com/users/" + GITHUB_USER + "/repos?sort=updated&per_page=30";
+  var API_URL = "https://api.github.com/users/waabox/repos?sort=updated&per_page=30";
 
   var LANG_COLORS = {
     Java: "#b07219",
@@ -64,22 +63,32 @@
 
     card.innerHTML =
       '<div class="project-card-header">' +
-      repoIcon() +
-      '<span class="project-card-name">' + escapeHtml(repo.name) + "</span>" +
-      (isMcp ? '<span class="tag">MCP</span>' : "") +
+        repoIcon() +
+        '<span class="project-card-name">' + escapeHtml(repo.name) + "</span>" +
+        (isMcp ? '<span class="tag">MCP</span>' : "") +
       "</div>" +
       '<p class="project-card-description">' + escapeHtml(description) + "</p>" +
+
+      (repo.topics && repo.topics.length > 0
+        ? '<div class="project-card-tags">' +
+            repo.topics
+              .map(function (t) {
+                return '<span class="tag small-tag">' + escapeHtml(t) + "</span>";
+              })
+              .join("") +
+          "</div>"
+        : ""
+      ) +
+
       '<div class="project-card-meta">' +
-      (repo.language
-        ? '<span class="meta-item"><span class="lang-dot" style="background-color:' +
-          langColor +
-          '"></span>' +
-          escapeHtml(repo.language) +
-          "</span>"
-        : "") +
-      (repo.stargazers_count > 0
+        (repo.language
+         ? '<span class="meta-item"><span class="lang-dot" style="background-color:' + langColor + '"></span>' +
+            escapeHtml(repo.language) +
+           "</span>"
+          : "") +
+        (repo.stargazers_count > 0
         ? '<span class="meta-item">' + starIcon() + " " + repo.stargazers_count + "</span>"
-        : "") +
+          : "") +
       "</div>";
 
     return card;
