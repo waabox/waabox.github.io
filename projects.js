@@ -26,13 +26,11 @@
   var error = document.getElementById("error");
   var filterButtons = document.querySelectorAll(".filter-btn");
   var searchInput = document.getElementById("search-input");
-  var sortSelect = document.getElementById("sort-select");
   var resultsCount = document.getElementById("results-count");
 
   var allRepos = [];
   var currentFilter = "all";
   var currentSearch = "";
-  var currentSort = "recent";
 
   // ===== Dark/Light Mode Toggle =====
   var themeToggle = document.getElementById("theme-toggle");
@@ -198,16 +196,8 @@
       return true;
     });
 
-    // Sort
     filtered.sort(function (a, b) {
-      if (currentSort === "stars") {
-        return (b.stargazers_count || 0) - (a.stargazers_count || 0);
-      } else if (currentSort === "name") {
-        return (a.name || "").localeCompare(b.name || "");
-      } else {
-        // recent (default): by latest commit (pushed_at)
-        return new Date(b.pushed_at || b.updated_at) - new Date(a.pushed_at || a.updated_at);
-      }
+      return new Date(b.pushed_at || b.updated_at) - new Date(a.pushed_at || a.updated_at);
     });
 
     return filtered;
@@ -280,12 +270,6 @@
       currentSearch = searchInput.value;
       renderRepos();
     }, 200);
-  });
-
-  // Sort select
-  if (sortSelect) sortSelect.addEventListener("change", function () {
-    currentSort = sortSelect.value;
-    renderRepos();
   });
 
   // ===== Init =====
