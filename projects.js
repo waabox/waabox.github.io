@@ -215,11 +215,13 @@
   }
 
   function renderRepos() {
+    if (!grid) return;
     grid.innerHTML = "";
     var filtered = getFilteredRepos();
 
-    // Update results count
-    resultsCount.textContent = "Showing " + filtered.length + " of " + allRepos.length + " repositories";
+    if (resultsCount) {
+      resultsCount.textContent = "Showing " + filtered.length + " of " + allRepos.length + " repositories";
+    }
 
     if (filtered.length === 0) {
       grid.innerHTML = '<div class="empty-state"><p>No projects match your search.</p></div>';
@@ -233,8 +235,8 @@
 
   // ===== Fetch Repos =====
   function fetchRepos() {
-    loading.style.display = "block";
-    error.style.display = "none";
+    if (loading) loading.style.display = "block";
+    if (error) error.style.display = "none";
 
     fetch(API_URL, {
       headers: { Accept: "application/vnd.github.mercy-preview+json" },
@@ -248,12 +250,12 @@
           return !r.fork;
         });
 
-        loading.style.display = "none";
+        if (loading) loading.style.display = "none";
         renderRepos();
       })
       .catch(function () {
-        loading.style.display = "none";
-        error.style.display = "block";
+        if (loading) loading.style.display = "none";
+        if (error) error.style.display = "block";
       });
   }
 
@@ -273,7 +275,7 @@
 
   // Search input (debounced)
   var searchTimeout;
-  searchInput.addEventListener("input", function () {
+  if (searchInput) searchInput.addEventListener("input", function () {
     clearTimeout(searchTimeout);
     searchTimeout = setTimeout(function () {
       currentSearch = searchInput.value;
@@ -282,7 +284,7 @@
   });
 
   // Sort select
-  sortSelect.addEventListener("change", function () {
+  if (sortSelect) sortSelect.addEventListener("change", function () {
     currentSort = sortSelect.value;
     renderRepos();
   });
