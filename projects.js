@@ -3,6 +3,10 @@
 
   var API_URL = "https://api.github.com/users/waabox/repos?sort=updated&per_page=30";
 
+  var IGNORED_REPOS = [
+    "waabox.github.io",
+  ];
+
   var LANG_COLORS = {
     Java: "#b07219",
     Rust: "#dea584",
@@ -56,9 +60,7 @@
   }
 
   var storedTheme = getStoredTheme();
-  if (storedTheme) {
-    setTheme(storedTheme);
-  }
+  setTheme(storedTheme || "light");
 
   if (themeToggle) {
     themeToggle.addEventListener("click", function () {
@@ -203,11 +205,8 @@
       } else if (currentSort === "name") {
         return (a.name || "").localeCompare(b.name || "");
       } else {
-        // recent (default): MCP first, then by updated_at
-        var aMcp = classifyRepo(a) === "mcp" ? 0 : 1;
-        var bMcp = classifyRepo(b) === "mcp" ? 0 : 1;
-        if (aMcp !== bMcp) return aMcp - bMcp;
-        return new Date(b.updated_at) - new Date(a.updated_at);
+        // recent (default): by latest commit (pushed_at)
+        return new Date(b.pushed_at || b.updated_at) - new Date(a.pushed_at || a.updated_at);
       }
     });
 
@@ -247,7 +246,7 @@
       })
       .then(function (repos) {
         allRepos = repos.filter(function (r) {
-          return !r.fork;
+          return !r.fork && IGNORED_REPOS.indexOf(r.name) === -1;
         });
 
         if (loading) loading.style.display = "none";

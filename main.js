@@ -26,11 +26,9 @@
     }
   }
 
-  // Initialize theme
+  // Initialize theme (default to light)
   var storedTheme = getStoredTheme();
-  if (storedTheme) {
-    setTheme(storedTheme);
-  }
+  setTheme(storedTheme || "light");
 
   if (themeToggle) {
     themeToggle.addEventListener("click", function () {
