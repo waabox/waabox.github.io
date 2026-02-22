@@ -5,6 +5,8 @@
 
   var IGNORED_REPOS = [
     "waabox.github.io",
+    "homebrew-gitdeck",
+    "gz-claude"
   ];
 
   var LANG_COLORS = {
